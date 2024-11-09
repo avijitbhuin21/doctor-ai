@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Baloo+2:400,800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
+    <title>Client Communication App</title>
+    <style>
+          @import url("https://fonts.googleapis.com/css2?family=Anton&display=swap");
+
+          :root {
+            --color-blue: #83af9b;
+            --color-green: #c8c8a9;
+            --color-brown: #774f38;
+            --color-beige: #ece5ce;
+            --color-yellow: #f9cdad;
+            --color-pink: #fe4365;
+        }
+        
+        body {
+            margin: 0;
+            font-family: sans-serif;
+            background-color: #f9fafb;
+            color: #333;
+        }
+        
+        .app-container {
+            display: flex;
+            height: 100vh;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 256px;
+            background-color: #fff;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 1px 0 5px rgba(0, 0, 0, 0.1);
+            padding-left: 150px;
+            padding-top: 100px;
+        }
+        
+        .sidebar-header {
+            margin-bottom: 32px;
+        }
+        
+        .icon {
+            width: 24px;
+            height: 24px;
+            color: #9ca3af;
+        }
+        
+        .client-details h1 {
+          font-size: 35px;
+          font-weight: bold;
+          margin-bottom: 24px;
+          font-family: 'Anton', sans-serif;
+        }
+        
+        .client-details h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .contact-info {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 4px;
+        }
+        
+        .project-info {
+            margin-top: 24px;
+        }
+        
+        .project-info div {
+            margin-bottom: 16px;
+        }
+        
+        .info-value {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .info-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-left: 4px;
+        }
+        
+        .project-brief {
+            margin-top: auto;
+            font-size: 14px;
+            color: #3b82f6;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .project-brief:hover {
+            text-decoration: underline;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+        }
+        
+        .messages {
+            flex-grow: 1;
+            padding: 24px;
+            overflow-y: auto;
+        }
+        
+        .message {
+            display: flex;
+            margin-bottom: 24px;
+            margin-right: 70px;
+            padding-right: 50px;
+        }
+        
+        .message.client {
+            justify-content: flex-end;
+        }
+        
+        .message .message-content {
+            max-width: 600px;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .message.client .message-content {
+            flex-direction: row-reverse;
+        }
+        
+        .message .avatar {
+            width: 32px;
+            height: 32px;
+            margin-left: 10px;
+            margin-right: 10px;
+            border-radius: 50%;
+            padding-top: 10px;
+        }
+        
+        .message .message-bubble {
+            transform: translateY(0px);
+            animation: float 5s ease-in-out infinite;
+            text-align: center;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 3px;
+            font-size: 15px;
+            color: var(--color-brown);
+            background-color: var(--color-beige);
+            padding-right: 25px;
+            padding-left: 25px;
+            border-radius: 35px 35px 35px 0px;
+            position: relative;
+            box-shadow: 20px 20px 30px rgba(131, 175, 155, 0.5);
+            font-family: "Baloo 2", cursive;
+            margin-bottom: 65px;
+            max-width: 1200px;
+        }
+
+        .messages::-webkit-scrollbar {
+            display: none;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+        
+        @keyframes float2 {
+            0% {
+                line-height: 30px;
+                transform: translateY(0px);
+            }
+            55% {
+                transform: translateY(-20px);
+            }
+            60% {
+                line-height: 10px;
+            }
+            100% {
+                line-height: 30px;
+                transform: translateY(0px);
+            }
+        }
+        
+        .message.client .message-bubble {
+            background-color: #eff6ff;
+            border-radius: 50px 50px 0px 50px;
+
+        }
+        
+        .message .message-text {
+            font-size: 14px;
+            padding-top: 5px;
+            padding-bottom: 10px;
+        }
+        
+        .message .message-time {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 8px;
+        }
+        
+        /* Attachment Styles */
+        .attachment-card {
+            margin-top: 16px;
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-radius: 50px 50px 0px 50px;
+            margin-bottom: 25px;
+        }
+        
+        .attachment-card img {
+            width: 100%;
+            height: auto;
+        }
+        
+        .attachment-content {
+            padding: 12px;
+        }
+        
+        .attachment-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .attachment-description {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 12px;
+        }
+        
+        .attachment-buttons {
+            display: flex;
+            gap: 8px;
+            padding-left: 35%;
+        }
+        
+        .attachment-buttons button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        .button-primary {
+            background-color: #3b82f6;
+            color: #fff;
+        }
+        
+        .button-outline {
+            background-color: #fff;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+        
+        .button-primary:hover {
+            background-color: #2563eb;
+        }
+        
+        .button-outline:hover {
+            border-color: #9ca3af;
+        }
+        
+        /* Message Input Styles */
+        .message-input {
+            padding-left: 16px;
+            padding-right: 16px;
+            padding-bottom: 16px;
+            display: flex;
+        }
+        
+        .message-input input {
+            flex-grow: 1;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 14px;
+            border-radius: 35px 35px 35px 35px;
+            outline: none;
+            border-color: transparent;
+            background-color: #ece5ce;
+            padding: 20px;
+        }
+        
+        .message-input input:focus {
+            outline: none;
+            border-color: transparent;
+            background-color: #e5d7a5;
+            transition: ease-in-out 0.3s;
+        }
+        
+        .message-input button {
+            margin-left: 8px;
+            padding: 0 16px;
+            background-color: #3b82f6;
+            border: none;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .message-input button:hover {
+            background-color: #2563eb;
+        }
+        
+        /* Scrollbar Styling */
+        /* .messages::-webkit-scrollbar {
+            width: 8px;
+        } */
+        
+        .messages::-webkit-scrollbar-thumb {
+            background-color: #d1d5db;
+            border-radius: 4px;
+        }
+
+        
+      </style>  
+</head>
+<body>
+    <div id="popup-overlay" class="popup-overlay" >
+            <form style="padding: 16px; width: 320px; margin: 7% auto; background-color: #EBECF0; border-radius: 16px; box-shadow: -10px -10px 30px #FFF, 10px 10px 30px #BABECC;">
+                <div style="padding: 32px 0; text-align: center;">
+                    <h1 style="font-weight: 900; margin: 0; color: #BABECC; text-shadow: 1px 1px 1px #FFF;">Doctor AI</h1>
+                </div>
+        
+                <label style="display: block; margin-bottom: 24px; width: 100%;">
+                    <input type="text" placeholder="Full Name" id="name" name="name" required style="font-family: 'Montserrat', sans-serif; border: 0; outline: 0; font-size: 16px; border-radius: 320px; padding: 16px; background-color: #EBECF0; box-shadow: inset 2px 2px 5px #BABECC, inset -5px -5px 10px #FFF; width: 100%; box-sizing: border-box; transition: all 0.2s ease-in-out; -webkit-appearance: none;">
+                </label>
+                <label style="display: block; margin-bottom: 24px; width: 100%;">
+                    <select id="gender_select" name="gender" required style="font-family: 'Montserrat', sans-serif; border: 0; outline: 0; font-size: 16px; border-radius: 320px; padding: 16px; background-color: #EBECF0; box-shadow: inset 2px 2px 5px #BABECC, inset -5px -5px 10px #FFF; width: 100%; box-sizing: border-box; transition: all 0.2s ease-in-out; appearance: none; -webkit-appearance: none; text-align-last: left; padding-left: 24px;">
+                        <option value="" disabled selected>Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </label>
+                <label style="display: block; margin-bottom: 24px; width: 100%;">
+                    <input type="number" placeholder="Age" id="age" name="age" required style="font-family: 'Montserrat', sans-serif; border: 0; outline: 0; font-size: 16px; border-radius: 320px; padding: 16px; background-color: #EBECF0; box-shadow: inset 2px 2px 5px #BABECC, inset -5px -5px 10px #FFF; width: 100%; box-sizing: border-box; transition: all 0.2s ease-in-out; -webkit-appearance: none;">
+                </label>
+                <label style="display: block; margin-bottom: 24px; width: 100%;">
+                    <input type="number" placeholder="Height (cm)" id="height" name="height" required style="font-family: 'Montserrat', sans-serif; border: 0; outline: 0; font-size: 16px; border-radius: 320px; padding: 16px; background-color: #EBECF0; box-shadow: inset 2px 2px 5px #BABECC, inset -5px -5px 10px #FFF; width: 100%; box-sizing: border-box; transition: all 0.2s ease-in-out; -webkit-appearance: none;">
+                </label>
+                <label style="display: block; margin-bottom: 24px; width: 100%;">
+                    <input type="number" placeholder="Weight (kg)" id="weight" name="weight" required style="font-family: 'Montserrat', sans-serif; border: 0; outline: 0; font-size: 16px; border-radius: 320px; padding: 16px; background-color: #EBECF0; box-shadow: inset 2px 2px 5px #BABECC, inset -5px -5px 10px #FFF; width: 100%; box-sizing: border-box; transition: all 0.2s ease-in-out; -webkit-appearance: none;">
+                </label>
+                <label style="display: block; margin-bottom: 24px; width: 100%;">
+                    <textarea placeholder="Describe your medical concern" id="medical-issue" name="medical-issue" rows="4" required style="font-family: 'Montserrat', sans-serif; border: 0; outline: 0; font-size: 16px; border-radius: 320px; padding: 16px; background-color: #EBECF0; box-shadow: inset 2px 2px 5px #BABECC, inset -5px -5px 10px #FFF; width: 100%; box-sizing: border-box; transition: all 0.2s ease-in-out;"></textarea>
+                </label>
+        
+                <button class="red" type="submit" id="start_chat" style="letter-spacing: 2.5px; font-family: 'Montserrat', sans-serif; color:#AE1100; font-weight: bold; box-shadow: -5px -5px 20px #FFF, 5px 5px 20px #BABECC; transition: all 0.2s ease-in-out; cursor: pointer; font-weight: 600; display: block; width: 100%; padding: 16px; background-color: #EBECF0; border-radius: 320px;" onclick="disable_overlay()">
+                    <i class="icon ion-md-medkit" style="margin-right: 8px;"></i> Initiate Consultation
+                </button>
+            </form>
+        
+    </div>
+
+    <div id = "not_popup" style="display: none;">
+            <div class="app-container" >
+            
+                    <div class="client-details">
+
+                        <h1>DOCTOR  AI</h1>
+                        <h2>Patient Profile</h2>
+                        <p class="contact-info">hey@example.com</p>
+                        <p class="contact-info">123-555-0123</p>
+                        <div class="project-info">
+                            <div>
+                                <span class="info-value">$12,500</span>
+                                <span class="info-label">Project Budget</span>
+                            </div>
+                            <div>
+                                <span class="info-value">June 23rd</span>
+                                <span class="info-label">Project Due Date</span>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#" class="project-brief">
+                        View Full Project Brief
+                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                </div>
+
+                <!-- Main Content -->
+                <div class="main-content">
+                    <!-- Messages -->
+                    <div class="messages" id="messages">
+                        <!-- Messages will be injected here by JavaScript -->
+                    </div>
+                    <!-- Message Input -->
+                    <div class="message-input">
+                        <input type="text" id="messageInput" placeholder="Type your message..." />
+                    </div>
+                </div>
+            </div>
+    </div>
+    <script>
+        
+        // Messages Data
+        const messages = [
+            {
+                id: 1,
+                sender: "client",
+                content: "Hey Jane, you can see above I have attached a pdf of the final go at the design. Can you take a look and let me know what you think",
+                time: "10:34 AM",
+                avatar: "static/images/_11193016-fd02-4844-b971-970dca096770.jpg"
+            },
+            {
+                id: 2,
+                sender: "designer",
+                content: "Hi Madeleine! This is looking great! Can't see it with a different color other than that yellow?",
+                time: "11:15 AM",
+                avatar: "static/images/_11193016-fd02-4844-b971-970dca096770.jpg"
+            },
+            {
+                id: 3,
+                sender: "client",
+                content: "Yes, absolutely! What do you think about a green color instead?",
+                time: "10:38 AM",
+                avatar: "static/images/_11193016-fd02-4844-b971-970dca096770.jpg"
+            },
+            {
+                id: 4,
+                sender: "client",
+                content: "Here's the updated version with green:",
+                time: "10:40 AM",
+                avatar: "static/images/_11193016-fd02-4844-b971-970dca096770.jpg",
+                attachment: {
+                    title: "Pixel Perfect Design Resources V2",
+                    description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
+                    image: "static/images/Avijit's Resume.pdf"
+                }
+            }
+        ];
+
+        // Function to render messages
+        function renderMessages() {
+            const messagesContainer = document.getElementById('messages');
+            messagesContainer.innerHTML = '';
+
+            messages.forEach(message => {
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message', message.sender);
+
+                const messageContent = document.createElement('div');
+                messageContent.classList.add('message-content');
+
+                const avatar = document.createElement('img');
+                avatar.src = message.avatar;
+                avatar.alt = 'Avatar';
+                avatar.classList.add('avatar');
+
+                const messageBubble = document.createElement('div');
+                messageBubble.classList.add('message-bubble');
+
+                const messageText = document.createElement('p');
+                messageText.classList.add('message-text');
+                messageText.textContent = message.content;
+
+                const holder = document.createElement('div');
+                holder.classList.add('holder');
+
+                holder.appendChild(avatar);
+                holder.appendChild(messageText);
+                holder.style.display = 'flex';
+                messageBubble.appendChild(holder);
+                
+                if (message.attachment) {
+                  const attachmentCard = document.createElement('div');
+                  attachmentCard.classList.add('attachment-card');
+
+                  const attachmentImage = document.createElement('iframe');
+                  attachmentImage.src = message.attachment.image;
+                  attachmentImage.alt = 'Design preview';
+
+                  const attachmentContent = document.createElement('div');
+                  attachmentContent.classList.add('attachment-content');
+
+                  const attachmentTitle = document.createElement('h3');
+                  attachmentTitle.classList.add('attachment-title');
+                  attachmentTitle.textContent = message.attachment.title;
+
+                  const attachmentDescription = document.createElement('p');
+                  attachmentDescription.classList.add('attachment-description');
+                  attachmentDescription.textContent = message.attachment.description;
+
+                  const attachmentButtons = document.createElement('div');
+                  attachmentButtons.classList.add('attachment-buttons');
+
+                  const downloadButton = document.createElement('button');
+                  downloadButton.classList.add('button-primary');
+                  downloadButton.textContent = 'Download Now';
+                  downloadButton.onclick = () => alert('Starting download...');
+
+                  const quickViewButton = document.createElement('button');
+                  quickViewButton.classList.add('button-outline');
+                  quickViewButton.textContent = 'Quick View';
+                  quickViewButton.onclick = () => alert('Opening quick view...');
+
+                  attachmentButtons.appendChild(downloadButton);
+                  attachmentButtons.appendChild(quickViewButton);
+
+                  attachmentContent.appendChild(attachmentTitle);
+                  attachmentContent.appendChild(attachmentDescription);
+                  attachmentContent.appendChild(attachmentButtons);
+
+                  attachmentCard.appendChild(attachmentImage);
+                  attachmentCard.appendChild(attachmentContent);
+
+                  messageBubble.appendChild(attachmentCard);
+              }
+
+                
+                messageContent.appendChild(messageBubble);
+
+                messageElement.appendChild(messageContent);
+
+                messagesContainer.appendChild(messageElement);
+            });
+        }
+
+        // Function to send a new message
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const content = messageInput.value.trim();
+            if (content !== '') {
+                const newMessage = {
+                    id: messages.length + 1,
+                    sender: "designer", // Assuming the sender is the designer
+                    content: content,
+                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                    avatar: "https://via.placeholder.com/32"
+                };
+                messages.push(newMessage);
+                renderMessages();
+                messageInput.value = '';
+                // Scroll to bottom
+                const messagesContainer = document.getElementById('messages');
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        }
+
+        // Event Listener for Enter Key in Input Field
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Initial Render of Messages
+        renderMessages();
+
+        function disable_overlay(event) {
+            // Get all form elements
+            const formElements = {
+                name: document.getElementById('name'),
+                gender: document.getElementById('gender_select'),
+                age: document.getElementById('age'),
+                height: document.getElementById('height'),
+                weight: document.getElementById('weight'),
+                medicalIssue: document.getElementById('medical-issue')
+            };
+
+            // Reset any previous error styling
+            Object.values(formElements).forEach(element => {
+                element.style.borderColor = '';
+                element.style.boxShadow = 'inset 2px 2px 5px #BABECC, inset -5px -5px 10px #FFF';
+            });
+
+            // Check each field and track if any are empty
+            let hasEmptyFields = false;
+            const errorStyle = {
+                borderColor: '#ff0000',
+                boxShadow: 'inset 2px 2px 5px #ffcdd2, inset -5px -5px 10px #FFF'
+            };
+
+            // Validate each field
+            Object.entries(formElements).forEach(([key, element]) => {
+                const value = element.value.trim();
+                if (!value || value === '') {
+                    hasEmptyFields = true;
+                    element.style.borderColor = errorStyle.borderColor;
+                    element.style.boxShadow = errorStyle.boxShadow;
+                    
+                    // Create or update error message
+                    let errorMsg = element.parentElement.querySelector('.error-message');
+                    if (!errorMsg) {
+                        errorMsg = document.createElement('div');
+                        errorMsg.className = 'error-message';
+                        errorMsg.style.color = '#ff0000';
+                        errorMsg.style.fontSize = '12px';
+                        errorMsg.style.marginTop = '5px';
+                        errorMsg.style.marginLeft = '16px';
+                        element.parentElement.appendChild(errorMsg);
+                    }
+                    errorMsg.textContent = `Please enter your ${key.replace(/([A-Z])/g, ' $1')}`;
+                } else {
+                    // Remove error message if it exists
+                    const errorMsg = element.parentElement.querySelector('.error-message');
+                    if (errorMsg) {
+                        errorMsg.remove();
+                    }
+                }
+            });
+
+            // Only proceed if all fields are filled
+            if (!hasEmptyFields) {
+                const popup = document.getElementById('popup-overlay');
+                const not_popup = document.getElementById('not_popup');
+
+                popup.style.display = 'none';
+                not_popup.style.display = 'flex';
+            }
+            event.preventDefault();
+        }
+
+        
+    </script>
+</body>
+</html>
+
+
+
+
