@@ -17,7 +17,21 @@ DIAGONOSING_PROMPT = '''Based on this data, you have to find out the disease of 
 
 DECIDING_PROMPT = '''Based on this chat and Patient details you have to guess the disease of the patient.
                      Use this JSON schema when generating answer:
-                        {"status": status (str), "disease": disease (str)}
+                        {"status": "success", "disease": disease (str)}
 
                      You must put the JSON answer between two ```.
                         '''
+
+WEBPAGE_EXTRACTOR = '''Based on this data Construct the answer in this JSON format.
+                        {"disease":str, "meds":list(str), "other_treatments": list(str)}
+                        Question:
+                        what are the medications and treatments for [[[disease]]]?
+                        Answer:'''
+
+INFORM_PATIENT_PROMPT = '''Based on the above Information, tell the patient about his disease and treatments along with the steps he can take by himself to improve his condition.
+                           Ask the patient to see a Doctor before taking any meds from the prescription.
+                           Generate the answer in MARKDOWN format.
+                           keep the report short and consice as it will be displayed in a chat.
+                           For advices use bullets.
+                           Do not include any explanations or apologies in your responses.
+                           Do not include any text except the generated answer.'''
